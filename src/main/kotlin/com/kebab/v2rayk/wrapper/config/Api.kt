@@ -6,11 +6,11 @@ data class Api(
 	/**
 	 * 出站代理标识
 	 */
-	val tag: String,
+	var tag: String,
 	/**
 	 * 开启的 API 列表
 	 */
-	val services: List<ApiType>,
+	var services: List<ApiType> = mutableListOf(),
 )
 enum class ApiType(@JsonValue val apiName: String) {
 	/**

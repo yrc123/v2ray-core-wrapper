@@ -52,7 +52,7 @@ data class Sniffing(
 	/**
 	 * 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标。
 	 */
-	var destOverride: List<SniffingType> = listOf(),
+	var destOverride: List<SniffingType> = mutableListOf(),
 )
 data class StreamSettings(
 	var any: Any? = null

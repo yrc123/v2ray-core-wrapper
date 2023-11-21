@@ -7,7 +7,7 @@ data class V2rayProperties(
 	val stats: Stats? = null,
 	val routing: Routing? = null,
 	val policy: Policy? = null,
-//	val reverse: Reverse? = null,
+	val reverse: Reverse? = null,
 	val inbounds: List<Inbound>? = null,
 //	val outbounds: List<Outbounds>? = null,
 //	val transport: Transport? = null,

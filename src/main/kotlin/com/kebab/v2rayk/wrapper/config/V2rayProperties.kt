@@ -9,6 +9,6 @@ data class V2rayProperties(
 	val policy: Policy? = null,
 	val reverse: Reverse? = null,
 	val inbounds: List<Inbound>? = null,
-//	val outbounds: List<Outbounds>? = null,
+	val outbounds: List<Outbound>? = null,
 //	val transport: Transport? = null,
 )

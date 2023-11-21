@@ -19,5 +19,5 @@ package com.kebab.v2rayk.wrapper.config
  *    inbound>>>[tag]>>>traffic>>>downlink
  */
 data class Stats(
-    val unit: Unit? = null,
+    val nothing: Nothing? = null,
 )

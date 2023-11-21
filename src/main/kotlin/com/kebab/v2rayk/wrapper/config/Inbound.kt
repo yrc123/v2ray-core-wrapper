@@ -1,6 +1,9 @@
 package com.kebab.v2rayk.wrapper.config
 
 import com.fasterxml.jackson.annotation.JsonValue
+import com.kebab.v2rayk.wrapper.config.bound.ProtocolType
+import com.kebab.v2rayk.wrapper.config.bound.Settings
+import com.kebab.v2rayk.wrapper.config.bound.StreamSettings
 
 data class Inbound(
 	/**
@@ -19,7 +22,7 @@ data class Inbound(
 	/**
 	 * 连接协议名称
 	 */
-	var protocol: Protocol,
+	var protocol: ProtocolType,
 	/**
 	 * 具体的配置内容，视协议不同而不同。详见每个协议中的InboundConfigurationObject。
 	 */
@@ -31,7 +34,7 @@ data class Inbound(
 	/**
 	 * 此入站连接的标识，用于在其它的配置中定位此连接。当其不为空时，其值必须在所有tag中唯一。
 	 */
-	var tag: String,
+	var tag: String? = null,
 	/**
 	 * 流量监控配置
 	 */
@@ -41,9 +44,7 @@ data class Inbound(
 	 */
 	var allocate: Allocate,
 )
-data class Settings(
-	var any: Any? = null
-)
+
 data class Sniffing(
 	/**
 	 * 是否开启流量探测。
@@ -54,10 +55,6 @@ data class Sniffing(
 	 */
 	var destOverride: List<SniffingType> = mutableListOf(),
 )
-data class StreamSettings(
-	var any: Any? = null
-)
-
 data class Allocate(
 	/**
 	 * 端口分配策略。
@@ -75,16 +72,6 @@ data class Allocate(
 	 */
 	var concurrency: Int = 3,
 )
-enum class Protocol(@JsonValue val protocolName: String) {
-	BLACKHOLE("Blackhole"),
-	DOKODEMO_DOOR("Dokodemo-door"),
-	FREEDOM("Freedom"),
-	HTTP("HTTP"),
-	MTPROTO("MTProto"),
-	SHADOWSOCKS("Shadowsocks"),
-	SOCKS("Socks"),
-	VMESS("VMess"),
-}
 enum class SniffingType(@JsonValue val sniffingName: String) {
 	HTTP("http"),
 	TLS("tls"),

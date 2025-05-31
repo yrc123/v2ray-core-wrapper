@@ -1,8 +1,10 @@
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.1.0"
     application
+    id("com.kebab.plugin.v2ray-resource-loader")
 }
 
 group = "com.kebab.v2rayk"
@@ -14,14 +16,13 @@ repositories {
 
 dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("commons-io:commons-io:2.11.0")
-    testImplementation(kotlin("test"))
+    implementation("net.lingala.zip4j:zip4j:2.11.5")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.10")
 }
-
 tasks.test {
     useJUnitPlatform()
 }
+tasks.processTestResources
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
@@ -32,3 +33,4 @@ tasks.withType<KotlinCompile>().configureEach {
 application {
     mainClass.set("MainKt")
 }
+

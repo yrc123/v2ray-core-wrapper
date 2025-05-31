@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.1.0"
     application
-    id("com.kebab.plugin.v2ray-resource-loader")
 }
 
 group = "com.kebab.v2rayk"

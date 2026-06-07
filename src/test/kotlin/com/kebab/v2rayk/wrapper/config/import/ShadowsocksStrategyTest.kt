@@ -21,7 +21,7 @@ class ShadowsocksStrategyTest {
 
         val outbound = outbounds[0]
         assertEquals(ProtocolType.SHADOWSOCKS, outbound.protocol)
-        assertEquals("JMS-143136", outbound.tag)
+        assertEquals("JMS-143136@c7s1.portablesubmarines.com:39120", outbound.tag)
 
         val settings = outbound.settings as ShadowsocksOutboundSettings
         assertEquals(1, settings.servers.size)
@@ -50,7 +50,7 @@ class ShadowsocksStrategyTest {
     fun `parse SS URL with simple tag`() {
         val url = "ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ@1.2.3.4:8388#MySimpleTag"
         val result = strategy.parse(url)
-        assertEquals("MySimpleTag", result.outbounds!![0].tag)
+        assertEquals("MySimpleTag@1.2.3.4:8388", result.outbounds!![0].tag)
     }
 
     @Test

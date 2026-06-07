@@ -33,7 +33,12 @@ class VmessStrategy : ImportStrategy {
             throw InvalidUrlFormatException("VMess URL 解析失败: ${e.message}", e)
         }
 
-        val nodeName = parsed.nodeName ?: "${parsed.host}:${parsed.port}"
+        // 将 host:port 加入名称以确保不同服务器的连接具有唯一文件名
+        val nodeName = if (parsed.nodeName != null) {
+            "${parsed.nodeName}@${parsed.host}:${parsed.port}"
+        } else {
+            "${parsed.host}:${parsed.port}"
+        }
 
         val outbound = Outbound(
             protocol = ProtocolType.VMESS,

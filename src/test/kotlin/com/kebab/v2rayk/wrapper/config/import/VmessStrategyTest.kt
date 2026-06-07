@@ -21,7 +21,7 @@ class VmessStrategyTest {
 
         val outbound = outbounds[0]
         assertEquals(ProtocolType.VMESS, outbound.protocol)
-        assertEquals("JMS-143136", outbound.tag)
+        assertEquals("JMS-143136@c7s3.portablesubmarines.com:39120", outbound.tag)
         assertEquals("0.0.0.0", outbound.sendThrough)
 
         val settings = outbound.settings as VmessOutboundSettings
@@ -40,7 +40,7 @@ class VmessStrategyTest {
         val settings = result.outbounds!![0].settings as VmessOutboundSettings
         assertEquals("c7s3.portablesubmarines.com", settings.vnext[0].address)
         assertEquals(39120, settings.vnext[0].port)
-        assertEquals("MyNode", result.outbounds!![0].tag)
+        assertEquals("MyNode@c7s3.portablesubmarines.com:39120", result.outbounds!![0].tag)
     }
 
     @Test
@@ -54,7 +54,7 @@ class VmessStrategyTest {
     fun `parse vmess URL uses fragment before at as tag`() {
         val url = "vmess://ecdd5fb7-867f-4218-8eb6-7c5be4aa06e1-0@1.2.3.4:8080/#NodeName@1.2.3.4:8080"
         val result = strategy.parse(url)
-        assertEquals("NodeName", result.outbounds!![0].tag)
+        assertEquals("NodeName@1.2.3.4:8080", result.outbounds!![0].tag)
     }
 
     @Test

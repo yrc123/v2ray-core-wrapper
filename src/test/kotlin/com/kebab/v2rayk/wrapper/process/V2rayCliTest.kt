@@ -21,7 +21,6 @@ class V2rayCliTest {
     fun testV2rayTest() {
         val v2RayCliServer = V2RayCliServer(Path("./tmp/vcore/v2ray.exe"))
         v2RayCliServer.start("./tmp/config.json")
-        Thread.sleep(10000)
         v2RayCliServer.stop()
     }
 }

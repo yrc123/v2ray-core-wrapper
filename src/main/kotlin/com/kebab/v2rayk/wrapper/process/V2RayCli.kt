@@ -2,59 +2,100 @@ package com.kebab.v2rayk.wrapper.process
 
 import java.nio.file.Path
 
+/**
+ * V2Ray CLI 命令行参数构建器。
+ *
+ * 新版 V2Ray CLI 使用子命令模式：
+ * ```
+ * v2ray <command> [arguments]
+ * ```
+ *
+ * @param v2rayCliPath V2Ray 可执行文件路径
+ * @param command 要执行的子命令
+ */
 class V2RayCli(
-    /**
-     * v2rayCli可执行文件地址
-     */
     private val v2rayCliPath: Path,
-    /**
-     * 只输出当前版本然后退出，不运行 V2Ray 主程序。
-     */
-    private val version: Boolean = false,
-
-    /**
-     * 测试配置文件有效性，如果有问题则输出错误信息，不运行 V2Ray 主程序。
-     */
-    private val test: Boolean = false,
-
-    /**
-     * 配置文件路径，可选的形式如下:
-     *
-     * 本地路径，可以是一个绝对路径，或者相对路径。
-     * "stdin:": 表示将从标准输入读取配置文件内容，调用者必须在输入完毕后关闭标准输入流。
-     * 以http://或https://(均为小写)开头: V2Ray 将尝试从这个远程地址加载配置文件。
-     */
-    val config: String? = null,
-
+    private val command: Command,
 ) {
-    companion object {
-        const val VERSION_OPTION = "version"
-        const val TEST_OPTION = "test"
-        const val RUN_OPTION = "run"
-        const val CONFIG_OPTION = "-c"
-        const val FORMAT_OPTION = "format"
-        const val CONFIG_STDIN = "stdin:"
+    /**
+     * V2Ray CLI 子命令。
+     */
+    sealed class Command {
+        /**
+         * 运行 V2Ray。
+         *
+         * @param config 配置文件路径，支持以下形式：
+         *   - 本地路径（绝对或相对）
+         *   - "stdin:" 从标准输入读取配置
+         *   - 以 http:// 或 https:// 开头的远程地址
+         * @param confdir 配置文件目录
+         * @param recursive 递归加载 confdir
+         * @param format 配置文件格式（"auto", "json", "pb" 等，默认自动检测）
+         */
+        data class Run(
+            val config: String? = null,
+            val confdir: String? = null,
+            val recursive: Boolean = false,
+            val format: String? = null,
+        ) : Command()
+
+        /**
+         * 测试配置文件有效性。
+         */
+        data class Test(
+            val config: String,
+        ) : Command()
+
+        /**
+         * 输出版本信息后退出。
+         */
+        object Version : Command()
     }
 
+    companion object {
+        const val CMD_RUN = "run"
+        const val CMD_TEST = "test"
+        const val CMD_VERSION = "version"
+        const val OPT_CONFIG = "-c"
+        const val OPT_CONFDIR = "-d"
+        const val OPT_RECURSIVE = "-r"
+        const val OPT_FORMAT = "-format"
+    }
 
     fun toProcessBuilder(): ProcessBuilder {
-        return ArrayList<String>().apply {
+        val args = ArrayList<String>().apply {
             add(v2rayCliPath.toString())
-            if (version) {
-                add(VERSION_OPTION)
+            when (command) {
+                is Command.Run -> {
+                    add(CMD_RUN)
+                    if (command.config != null) {
+                        addAll(listOf(OPT_CONFIG, command.config))
+                    }
+                    if (command.confdir != null) {
+                        addAll(listOf(OPT_CONFDIR, command.confdir))
+                    }
+                    if (command.recursive) {
+                        add(OPT_RECURSIVE)
+                    }
+                    if (command.format != null) {
+                        addAll(listOf(OPT_FORMAT, command.format))
+                    }
+                }
+                is Command.Test -> {
+                    addAll(listOf(CMD_TEST, OPT_CONFIG, command.config))
+                }
+                is Command.Version -> {
+                    add(CMD_VERSION)
+                }
             }
-            if (test) {
-                add(TEST_OPTION)
-            }
-            if (config != null) {
-                addAll(listOf(RUN_OPTION, CONFIG_OPTION, config))
-            }
-        }.let {
-            ProcessBuilder(it)
         }
+        return ProcessBuilder(args)
     }
 }
 
+/**
+ * 配置文件格式枚举。
+ */
 enum class FormatType(val typeName: String) {
     JSON("json"),
     PROTOBUF("pb"),

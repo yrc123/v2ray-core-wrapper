@@ -10,13 +10,14 @@ class V2rayCliTest {
     fun testV2rayVersion() {
         val process = V2RayCli(
             v2rayCliPath = Path("./tmp/vcore/v2ray.exe"),
-            version = true,
+            command = V2RayCli.Command.Version,
         ).toProcessBuilder()
             .start()
         val v2rayVersionInfo = process.inputReader().readText()
         println(v2rayVersionInfo)
         Assertions.assertTrue(v2rayVersionInfo.contains("V2Ray"))
     }
+
     @Test
     fun testV2rayTest() {
         val v2RayCliServer = V2RayCliServer(Path("./tmp/vcore/v2ray.exe"))

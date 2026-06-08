@@ -62,8 +62,11 @@ class V2RayCli(
         const val OPT_FORMAT = "-format"
     }
 
-    fun toProcessBuilder(): ProcessBuilder {
-        val args = ArrayList<String>().apply {
+    /**
+     * 构建命令行参数列表，由 [toProcessBuilder] 和 [toString] 复用。
+     */
+    private fun buildArgs(): List<String> {
+        return buildList {
             add(v2rayCliPath.toString())
             when (command) {
                 is Command.Run -> {
@@ -89,7 +92,17 @@ class V2RayCli(
                 }
             }
         }
-        return ProcessBuilder(args)
+    }
+
+    fun toProcessBuilder(): ProcessBuilder {
+        return ProcessBuilder(buildArgs())
+    }
+
+    /**
+     * 返回拼接后的命令行字符串，便于调试和日志输出。
+     */
+    override fun toString(): String {
+        return buildArgs().joinToString(" ")
     }
 }
 
